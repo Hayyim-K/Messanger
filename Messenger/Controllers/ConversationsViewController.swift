@@ -14,7 +14,7 @@ class ConversationsViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .red
         
-        DatabaseManager.shared.test()
+//        DatabaseManager.shared.test()
         
     }
     
@@ -28,7 +28,7 @@ class ConversationsViewController: UIViewController {
             let vc = LogInViewController()
             let nav = UINavigationController(rootViewController: vc)
             nav.modalPresentationStyle = .fullScreen
-            present(nav, animated: false)
+            present(nav, animated: true)
         }
     }
 
