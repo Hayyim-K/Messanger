@@ -207,8 +207,7 @@ class RegisterViewController: UIViewController {
               !firstName.isEmpty,
               !lastName.isEmpty,
               isValidEmail(email),
-              
-                password.count >= 6 else {
+              password.count >= 6 else {
             allertUserLoginError()
             return
         }
@@ -226,8 +225,12 @@ class RegisterViewController: UIViewController {
                 }
                 
                 guard !exists else {
-                    strongSelf.allertUserLoginError(messege: "Looks like a user account for that email address already exists.")
-                    return }
+                    strongSelf
+                        .allertUserLoginError(
+                            messege: "Looks like a user account for that email address already exists."
+                        )
+                    return
+                }
                 
                 
                 FirebaseAuth.Auth.auth().createUser(
@@ -242,12 +245,12 @@ class RegisterViewController: UIViewController {
                     
                     //            let user = result.user
                     //            print("Created User: \(user)")
-//                    
-//                    DatabaseManager.shared.insertUser(with: ChatAppUser(
-//                        firstName: firstName,
-//                        lastName: lastName,
-//                        emailAddress: email
-//                    ))
+                    //
+                    //                    DatabaseManager.shared.insertUser(with: ChatAppUser(
+                    //                        firstName: firstName,
+                    //                        lastName: lastName,
+                    //                        emailAddress: email
+                    //                    ))
                     
                     //insert to database
                     let chatUser = ChatAppUser(
@@ -258,7 +261,6 @@ class RegisterViewController: UIViewController {
                     DatabaseManager.shared.insertUser(with: chatUser) { success in
                         if success {
                             //upload image
-                            
                             guard let image = strongSelf.imageView.image,
                                   let data = image.pngData() else { return }
                             let fileName = chatUser.profilePictureFileName
@@ -309,7 +311,6 @@ extension RegisterViewController: UITextFieldDelegate {
         
         switch textField {
         case firstNameField:
-            print("FIRST")
             lastNameField.becomeFirstResponder()
             return true
         case lastNameField:
