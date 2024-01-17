@@ -3,6 +3,96 @@
 <plist version="1.0">
 <dict>
 	<key>top-level-items</key>
-	<array/>
+	<array>
+		<dict>
+			<key>destination</key>
+			<dict>
+				<key>location-parameters</key>
+				<dict>
+					<key>EndingColumnNumber</key>
+					<string>0</string>
+					<key>EndingLineNumber</key>
+					<string>596</string>
+					<key>StartingColumnNumber</key>
+					<string>0</string>
+					<key>StartingLineNumber</key>
+					<string>595</string>
+					<key>Timestamp</key>
+					<string>727018413.069851</string>
+				</dict>
+				<key>rebasable-url</key>
+				<dict>
+					<key>base</key>
+					<string>workspace</string>
+					<key>payload</key>
+					<dict>
+						<key>relative-path</key>
+						<string>Messenger/Resources/DatabaseManager.swift</string>
+					</dict>
+				</dict>
+			</dict>
+			<key>text-context</key>
+			<dict>
+				<key>focused</key>
+				<string>                            //IF IT doesn't WORK - Part 17 39:00
+</string>
+				<key>leading</key>
+				<string>                            //                            ]
+                            
+</string>
+				<key>trailing</key>
+				<string>                            
+                            for index in 0..&lt;currentUserConversations.count {
+                                if let currentID = currentUserConversations[index]["id"] as? String,
+</string>
+			</dict>
+			<key>type</key>
+			<string>bookmark</string>
+		</dict>
+		<dict>
+			<key>destination</key>
+			<dict>
+				<key>location-parameters</key>
+				<dict>
+					<key>EndingColumnNumber</key>
+					<string>12</string>
+					<key>EndingLineNumber</key>
+					<string>459</string>
+					<key>StartingColumnNumber</key>
+					<string>0</string>
+					<key>StartingLineNumber</key>
+					<string>459</string>
+					<key>Timestamp</key>
+					<string>727017027.32857</string>
+				</dict>
+				<key>rebasable-url</key>
+				<dict>
+					<key>base</key>
+					<string>workspace</string>
+					<key>payload</key>
+					<dict>
+						<key>relative-path</key>
+						<string>Messenger/Controllers/ChatViewController.swift</string>
+					</dict>
+				</dict>
+			</dict>
+			<key>text-context</key>
+			<dict>
+				<key>focused</key>
+				<string>            </string>
+				<key>leading</key>
+				<string>        if isNewConversation {
+            
+</string>
+				<key>trailing</key>
+				<string>//create convo in dataBase
+            DatabaseManager.shared.createNewConversation(
+                with: otherUserEmail,
+</string>
+			</dict>
+			<key>type</key>
+			<string>bookmark</string>
+		</dict>
+	</array>
 </dict>
 </plist>

@@ -321,7 +321,7 @@ extension LogInViewController: LoginButtonDelegate {
                     return
                 }
                 
-                print("\nWWWWWWWWWWWWWWW!WWWWWWWWŴ\n\(result)")
+//                print("\nWWWWWWWWWWWWWWW!WWWWWWWWŴ\n\(result)")
                 
                 guard let firstName = result["first_name"] as? String,
                       let lastName = result["last_name"] as? String,

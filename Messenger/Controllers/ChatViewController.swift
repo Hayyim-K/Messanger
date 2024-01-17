@@ -281,11 +281,13 @@ class ChatViewController: MessagesViewController {
     
     
     private func listenForMessages(id: String, shouldScrollToBottom: Bool) {
-        DatabaseManager.shared.getAllMessagesForConversation(with: id) { [weak self] result in
+        DatabaseManager
+            .shared
+            .getAllMessagesForConversation(with: id) { [weak self] result in
             
             switch result {
             case .success(let messages):
-                print("success in getting messages \(messages)")
+               
                 guard !messages.isEmpty else { return }
                 self?.messages = messages
                 
@@ -436,14 +438,15 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
 
 
 extension ChatViewController: InputBarAccessoryViewDelegate {
-    func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
+    
+    func inputBar(
+        _ inputBar: InputBarAccessoryView,
+        didPressSendButtonWith text: String
+    ) {
         guard !text.replacingOccurrences(of: " ", with: "").isEmpty,
               let selfSender = self.selfSender,
-              let messageId = createMessageId() else { return }
-        
-        print("""
-    Sending: \(text)
-""")
+              let messageId = createMessageId()
+        else { return }
         
         let message = Message(
             sender: selfSender,
@@ -453,8 +456,8 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         )
         // Send Message
         if isNewConversation {
-            //create convo in dataBase
             
+            //create convo in dataBase
             DatabaseManager.shared.createNewConversation(
                 with: otherUserEmail,
                 name: self.title ?? "User",
@@ -496,7 +499,8 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
             .value(forKey: "email") as? String
         else { return nil }
         
-        let safeCurrentEmail = DatabaseManager.safeEmail(emailAddress: currentUserEmail)
+        let safeCurrentEmail = DatabaseManager
+            .safeEmail(emailAddress: currentUserEmail)
         
         let dateString = Self.dateFormatter.string(from: Date())
         let newIdetifier = "\(otherUserEmail)_\(safeCurrentEmail)_\(dateString)"
@@ -521,7 +525,9 @@ extension ChatViewController: MessagesDataSource, MessagesDisplayDelegate, Messa
         messages[indexPath.section]
     }
     
-    func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
+    func numberOfSections(
+        in messagesCollectionView: MessagesCollectionView
+    ) -> Int {
         messages.count
     }
     
@@ -600,22 +606,26 @@ extension ChatViewController: MessageCellDelegate {
     
     func didTapImage(in cell: MessageKit.MessageCollectionViewCell) {
         
-        guard let indexPath = messagesCollectionView.indexPath(for: cell) else { return }
+        guard let indexPath = messagesCollectionView.indexPath(for: cell)
+        else { return }
+        
         let message = messages[indexPath.section]
         
         switch message.kind {
             
         case .photo(let media):
-            
             guard let imageURL = media.url else { return }
-            
+
             let vc = PhotoViewerViewController(with: imageURL)
             self.navigationController?.pushViewController(vc, animated: true)
+            
         case .video(let media):
             guard let videoURL = media.url else { return }
+            
             let vc = AVPlayerViewController()
             vc.player = AVPlayer(url: videoURL)
             present(vc, animated: true)
+            
         default:
             break
         }
