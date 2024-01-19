@@ -10,6 +10,7 @@
 import UIKit
 import FirebaseDatabase
 import MessageKit
+import CoreLocation
 
 final class DatabaseManager {
     
@@ -247,7 +248,10 @@ extension DatabaseManager {
                     message = targetURLString
                 }
                 break
-            case .location(_): break
+            case .location(let locationData):
+                let location = locationData.location
+                message = "\(location.coordinate.longitude),\(location.coordinate.latitude)"
+                break
             case .emoji(_): break
             case .audio(_): break
             case .contact(_): break
@@ -417,7 +421,9 @@ extension DatabaseManager {
                 let data: Any
                 
                 if let url = URL(string: content),
-                   let placeholder = UIImage(systemName: type) {
+                   let placeholder = UIImage(systemName: type),
+                   content.hasPrefix("http") {
+                   
                     data = Media(
                         url: url,
                         image: nil,
@@ -517,7 +523,10 @@ extension DatabaseManager {
                         message = targetUrlString
                     }
                     break
-                case .location(_): break
+                case .location(let locationData):
+                    let location = locationData.location
+                    message = "\(location.coordinate.longitude),\(location.coordinate.latitude)"
+                    break
                 case .emoji(_): break
                 case .audio(_): break
                 case .contact(_): break
@@ -827,7 +836,10 @@ extension DatabaseManager {
                 message = targetURLString
             }
             break
-        case .location(_): break
+        case .location(let locationData):
+            let location = locationData.location
+            message = "\(location.coordinate.longitude),\(location.coordinate.latitude)"
+            break
         case .emoji(_): break
         case .audio(_): break
         case .contact(_): break
@@ -880,6 +892,22 @@ extension DatabaseManager {
             return .photo(data as! MediaItem)
         case "video":
             return .video(data as! MediaItem)
+        case "location":
+            let locationString = data as! String
+            let locationComponents = locationString.components(separatedBy: ",")
+            
+            guard let longitude = Double(locationComponents[0]),
+                  let latitude = Double(locationComponents[1])
+            else { fallthrough }
+            
+            let location = Location(
+                location: CLLocation(
+                    latitude: latitude,
+                    longitude: longitude
+                ),
+                size: CGSize(width: 150, height: 150)
+            )
+            return .location(location)
         default:
             return .text(data as! String)
         }

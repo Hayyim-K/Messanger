@@ -25,6 +25,7 @@
 		6F8329462A93C07200F65E83 /* NewConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8329452A93C07200F65E83 /* NewConversationViewController.swift */; };
 		6F8329482A93C08700F65E83 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8329472A93C08600F65E83 /* ProfileViewController.swift */; };
 		6F83294B2A93CF8C00F65E83 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F83294A2A93CF8C00F65E83 /* Extensions.swift */; };
+		6F971C322B5814D6008DD59C /* LocationPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F971C312B5814D6008DD59C /* LocationPickerViewController.swift */; };
 		6FCD47972B18F2B000B4D557 /* NewConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD47962B18F2B000B4D557 /* NewConversationCell.swift */; };
 		6FCE00022B04E5DA00B6934B /* MessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6FCE00012B04E5DA00B6934B /* MessageKit */; };
 		6FCE00052B04E88700B6934B /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 6FCE00042B04E88700B6934B /* SDWebImage */; };
@@ -68,6 +69,7 @@
 		6F8329452A93C07200F65E83 /* NewConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationViewController.swift; sourceTree = "<group>"; };
 		6F8329472A93C08600F65E83 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		6F83294A2A93CF8C00F65E83 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		6F971C312B5814D6008DD59C /* LocationPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LocationPickerViewController.swift; path = ../../../LocationPickerViewController.swift; sourceTree = "<group>"; };
 		6FCD47962B18F2B000B4D557 /* NewConversationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -141,6 +143,7 @@
 				6F8329452A93C07200F65E83 /* NewConversationViewController.swift */,
 				6F8329472A93C08600F65E83 /* ProfileViewController.swift */,
 				6F33E6B12AFEC4E5000B226C /* ChatViewController.swift */,
+				6F971C312B5814D6008DD59C /* LocationPickerViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -248,7 +251,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 1520;
 				TargetAttributes = {
 					6F83291F2A93B7A800F65E83 = {
 						CreatedOnToolsVersion = 14.3.1;
@@ -316,6 +319,7 @@
 				6F33E6B22AFEC4E5000B226C /* ChatViewController.swift in Sources */,
 				6F8329422A93C04300F65E83 /* PhotoViewerViewController.swift in Sources */,
 				6F33E6B62B029D61000B226C /* StorageManager.swift in Sources */,
+				6F971C322B5814D6008DD59C /* LocationPickerViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,6 +349,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -406,6 +411,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
