@@ -26,8 +26,6 @@ final class DatabaseManager {
         return safeEmail
     }
     
-    
-    
     //    public func test() {
     //        database.child("foo").setValue(["something" : true])
     //
@@ -199,11 +197,22 @@ extension DatabaseManager {
      */
     
     /// Creates a new conversation with target user email and first message sent
-    public func createNewConversation(with otherUserEmail: String, name: String, firstMessage: Message, completion: @escaping (Bool) -> Void) {
-        guard let currentEmail = UserDefaults.standard.value(forKey: "email") as? String,
-              var currentName = UserDefaults.standard.value(forKey: "name") as? String
+    public func createNewConversation(
+        with otherUserEmail: String,
+        name: String,
+        firstMessage: Message,
+        completion: @escaping (Bool) -> Void
+    ) {
+        
+        print("smth wrong with next values")
+        print(UserDefaults.standard.dictionaryRepresentation())
+        var currentName = "User"
+        guard let currentEmail = UserDefaults.standard.value(forKey: "email") as? String
+//              var currentName = UserDefaults.standard.value(forKey: "name") as? String
         else { return }
 
+        print(currentEmail)
+        
         let safeEmail = DatabaseManager.safeEmail(emailAddress: currentEmail)
         
         database
@@ -480,16 +489,19 @@ extension DatabaseManager {
         database
             .child("\(currentEmail)")
             .observeSingleEvent(of: .value) { snapShot in
-            guard let otherData = snapShot.value as? [String: Any]
-            else { return }
-            
-            print("OTHERNAME")
-            print(otherData)
-            guard let currentFirstName = otherData["firstName"],
-                  let currentLastName = otherData["lastName"]
-            else { return }
-            currentName = "\(currentFirstName) \(currentLastName)"
-        }
+                guard let otherData = snapShot.value as? [String: Any]
+                else { return }
+                
+                print("OTHERNAME")
+                print(otherData)
+                guard let currentFirstName = otherData["firstName"],
+                      let currentLastName = otherData["lastName"]
+                else { return }
+                currentName = "\(currentFirstName) \(currentLastName)"
+                UserDefaults.standard.setValue(currentName, forKey: "name")
+            }
+        
+        
         
         
         database
@@ -979,7 +991,9 @@ extension DatabaseManager {
             .standard
             .value(forKey: "email") as? String
         else { return }
-        
+        print("")
+        print(senderEmail)
+        print("")
         let safeSenderEmail = DatabaseManager
             .safeEmail(emailAddress: senderEmail)
         

@@ -189,7 +189,7 @@ class LogInViewController: UIViewController {
         emailField.resignFirstResponder()
         passwordField.resignFirstResponder()
         
-        guard let email = emailField.text,
+        guard let email = emailField.text?.lowercased(),
               let password = passwordField.text,
               !email.isEmpty,
               password.count >= 6 else {
@@ -217,31 +217,43 @@ class LogInViewController: UIViewController {
             }
             let user = result.user
             
-            let safaEmail = DatabaseManager.safeEmail(emailAddress: email)
-            DatabaseManager.shared.getDataFor(path: safaEmail) { result in
+            let safeEmail = DatabaseManager.safeEmail(emailAddress: email)
+            DatabaseManager.shared.getDataFor(path: safeEmail) { result in
                 switch result {
                 case . success(let data):
+                    
                     guard let userData = data as? [String : Any],
-                          let firstName = userData["first_name"] as? String,
-                          let lastName = userData["last_name"] as? String
+                          let firstName = userData["firstName"] as? String,
+                          let lastName = userData["lastName"] as? String
                     else { return }
-                    
-                    UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
-                    
+
+//                    UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
+                    UserDefaults.standard.setValue("\(firstName) \(lastName)", forKey: "name")
                 case .failure(let error):
+
                     print("Failed to read data with error \(error)")
                 }
             }
             
-            UserDefaults.standard.set(email, forKey: "email")
+            UserDefaults.standard.setValue(email, forKey: "email")
             
             
-//            guard let displayName = user.displayName else { return }
-//            UserDefaults.standard.set("\(displayName)", forKey: "name")
+            //            guard let displayName = user.displayName else { return }
+            //            UserDefaults.standard.set("\(displayName)", forKey: "name")
             
             
             print("Logged In User: \(user)")
-            strongSelf.navigationController?.dismiss(animated: true)
+            
+            strongSelf.navigationController?.dismiss(animated: true){
+
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let delegate = windowScene.delegate as? SceneDelegate {
+                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                    let initialViewController = storyboard.instantiateInitialViewController()
+                    delegate.window?.rootViewController = initialViewController
+                }
+                
+            }
         }
         
     }

@@ -62,7 +62,7 @@ class ConversationsViewController: UIViewController {
         view.addSubview(tableView)
         view.addSubview(noConversationsLabel)
         setUpTableView()
-        fetchConversations()
+//        fetchConversations()
         startListeningForConversations()
         
         loginObserver = NotificationCenter.default.addObserver(
@@ -83,11 +83,18 @@ class ConversationsViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
+        noConversationsLabel.frame = CGRect(
+            x: 10,
+            y: (view.height - 100) / 2,
+            width: view.width - 20,
+            height: 100
+        )
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         validateAuth()
+        tableView.reloadData()
     }
     
     private func startListeningForConversations() {
@@ -111,7 +118,13 @@ class ConversationsViewController: UIViewController {
                     print("successfully conversation models")
                     
                     
-                    guard !conversations.isEmpty else { return }
+                    guard !conversations.isEmpty else {
+                        self?.tableView.isHidden = false
+                        self?.noConversationsLabel.isHidden = false
+                        return
+                    }
+                    self?.noConversationsLabel.isHidden = true
+                    self?.tableView.isHidden = false
                     self?.conversations = conversations
                     
                     DispatchQueue.main.async {
@@ -119,7 +132,8 @@ class ConversationsViewController: UIViewController {
                     }
                     
                 case .failure(let error):
-                    
+                    self?.tableView.isHidden = false
+                    self?.noConversationsLabel.isHidden = false
                     print("faild to get convos: \(error)")
                     
                 }
@@ -140,9 +154,9 @@ class ConversationsViewController: UIViewController {
         tableView.dataSource = self
     }
     
-    private func fetchConversations() {
-        tableView.isHidden = false
-    }
+//    private func fetchConversations() {
+//        tableView.isHidden = false
+//    }
     
     private func createNewConversation(result: SearchResult) {
         

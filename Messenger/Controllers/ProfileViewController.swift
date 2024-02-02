@@ -35,27 +35,39 @@ class ProfileViewController: UIViewController {
             forCellReuseIdentifier: ProfileTableViewCell.identifier
         )
         
-        setData()
-        //        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
+        //        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        setData()
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableHeaderView = createTableView()
         
+//        crashlyticsButton()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
     }
     
     private func setData() {
+        guard let email = UserDefaults.standard.value(forKey: "email") as? String
+        else { return }
+        
+        let name = UserDefaults.standard.value(forKey: "name") ?? "No name"
+        
         data.append(
             ProfileViewModel(
                 viewModelType: .info,
-                title: "Name: \(UserDefaults.standard.value(forKey: "name") as? String ?? "No Name")",
+                title: "Name: \(name)",
                 handler: nil
             )
         )
+        
         data.append(
             ProfileViewModel(
                 viewModelType: .info,
-                title: "Email: \(UserDefaults.standard.value(forKey: "email") as? String ?? "No Email")",
+                title: "Email: \(email)",
                 handler: nil
             )
         )
@@ -70,6 +82,16 @@ class ProfileViewController: UIViewController {
                 }
             )
         )
+//        data.append(
+//            ProfileViewModel(
+//                viewModelType: .logout,
+//                title: "CRASH TEST",
+//                handler: { [weak self] in
+//                    // Part 18 51:30
+//                    self?.crashlyticsButton()
+//                }
+//            )
+//        )
     }
     
     private func createTableView() -> UIView? {
@@ -147,6 +169,9 @@ class ProfileViewController: UIViewController {
                 return
             }
             
+            UserDefaults.standard.setValue(nil, forKey: "email")
+            UserDefaults.standard.setValue(nil, forKey: "name")
+            
             //LOG OUT FB
             FBSDKLoginKit.LoginManager().logOut()
             
@@ -155,15 +180,23 @@ class ProfileViewController: UIViewController {
             
             do {
                 try FirebaseAuth.Auth.auth().signOut()
+                strongSelf.dismiss(animated: true) {
+                    let vc = LogInViewController()
+                    let nav = UINavigationController(rootViewController: vc)
+                    nav.modalPresentationStyle = .fullScreen
+                    strongSelf.present(nav, animated: true)
+                }
+//                let vc = LogInViewController()
+//                let nav = UINavigationController(rootViewController: vc)
+//                nav.modalPresentationStyle = .fullScreen
+//                strongSelf.present(nav, animated: true)
                 
-                let vc = LogInViewController()
-                let nav = UINavigationController(rootViewController: vc)
-                nav.modalPresentationStyle = .fullScreen
-                strongSelf.present(nav, animated: true)
+                
                 
             } catch {
                 print("Faied to log out")
             }
+            
         })
         
         actionSheet.addAction(
@@ -309,5 +342,25 @@ class ProfileTableViewCell: UITableViewCell {
         self.contentConfiguration = content
     }
     
+}
+
+// crashlytics
+extension ProfileViewController {
+    private func crashlyticsButton() {
+        let button = UIButton(type: .roundedRect)
+        button.frame = CGRect(x: 20, y: 50, width: 100, height: 30)
+        button.setTitle("Test Crash", for: [])
+        button.addTarget(
+            self,
+            action: #selector(crashButtonTapped(_:)),
+            for: .touchUpInside
+        )
+        view.addSubview(button)
+    }
+    
+    @objc private  func crashButtonTapped(_ sender: AnyObject) {
+        let numbers = [0]
+        let _ = numbers[1]
+    }
 }
 

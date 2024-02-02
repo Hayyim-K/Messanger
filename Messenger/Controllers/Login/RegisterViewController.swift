@@ -243,6 +243,9 @@ class RegisterViewController: UIViewController {
                         return
                     }
                     
+                    UserDefaults.standard.setValue(email, forKey: "email")
+                    UserDefaults.standard.setValue("\(firstName) \(lastName)", forKey: "name")
+
                     //            let user = result.user
                     //            print("Created User: \(user)")
                     //
