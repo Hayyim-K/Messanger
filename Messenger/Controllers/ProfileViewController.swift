@@ -107,7 +107,7 @@ class ProfileViewController: UIViewController {
             frame: CGRect(
                 x: 0,
                 y: 0,
-                width: self.view.width,
+                width: view.width,
                 height: 300
             )
         )
@@ -162,8 +162,7 @@ class ProfileViewController: UIViewController {
         actionSheet.addAction(UIAlertAction(
             title: "Log Out",
             style: .destructive
-        ) {
-            [weak self] _ in
+        ) { [weak self] _ in
             
             guard let strongSelf = self else {
                 return
@@ -177,26 +176,22 @@ class ProfileViewController: UIViewController {
             
             // log out Google
             GIDSignIn.sharedInstance.signOut()
-            
+            //log out Firebase
             do {
                 try FirebaseAuth.Auth.auth().signOut()
-                strongSelf.dismiss(animated: true) {
-                    let vc = LogInViewController()
-                    let nav = UINavigationController(rootViewController: vc)
-                    nav.modalPresentationStyle = .fullScreen
-                    strongSelf.present(nav, animated: true)
-                }
-//                let vc = LogInViewController()
-//                let nav = UINavigationController(rootViewController: vc)
-//                nav.modalPresentationStyle = .fullScreen
-//                strongSelf.present(nav, animated: true)
-                
-                
-                
+                //                let vc = LogInViewController()
+                //                let nav = UINavigationController(rootViewController: vc)
+                //                nav.modalPresentationStyle = .fullScreen
+                //                strongSelf.present(nav, animated: true)
             } catch {
                 print("Faied to log out")
             }
-            
+            strongSelf.dismiss(animated: true) {
+                let vc = LogInViewController()
+                let nav = UINavigationController(rootViewController: vc)
+                nav.modalPresentationStyle = .fullScreen
+                strongSelf.present(nav, animated: true)
+            }
         })
         
         actionSheet.addAction(
@@ -334,12 +329,12 @@ class ProfileTableViewCell: UITableViewCell {
         switch viewModel.viewModelType {
         case .info:
             content.textProperties.alignment = .natural
-            self.selectionStyle = .none
+            selectionStyle = .none
         case .logout:
             content.textProperties.alignment = .center
             content.textProperties.color = .red
         }
-        self.contentConfiguration = content
+        contentConfiguration = content
     }
     
 }

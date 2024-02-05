@@ -45,25 +45,30 @@ final class StorageManager {
         fileName: String,
         completion: @escaping UploadPictureCompletion
     ) {
-        storage.child("image/\(fileName)").putData(data, metadata: nil) { metaData, error in
-            guard error == nil else {
-                //failed
-                print("failed to upload data to firebase for picture")
-                completion(.failure(StorageErrors.failedToUpload))
-                return
-            }
-            
-            self.storage.child("image/\(fileName)").downloadURL { url, error in
-                guard let url = url else {
-                    print("")
-                    completion(.failure(StorageErrors.faildToGetDownloadUrl))
+        storage
+            .child("image/\(fileName)")
+            .putData(data, metadata: nil) { [weak self] metaData, error in
+                
+                guard let strongSelf = self else { return }
+                
+                guard error == nil else {
+                    //failed
+                    print("failed to upload data to firebase for picture")
+                    completion(.failure(StorageErrors.failedToUpload))
                     return
                 }
-                let urlString = url.absoluteString
-                print("Download url returned: \(urlString)")
-                completion(.success(urlString))
+                
+                strongSelf.storage.child("image/\(fileName)").downloadURL { url, error in
+                    guard let url = url else {
+                        print("")
+                        completion(.failure(StorageErrors.faildToGetDownloadUrl))
+                        return
+                    }
+                    let urlString = url.absoluteString
+                    print("Download url returned: \(urlString)")
+                    completion(.success(urlString))
+                }
             }
-        }
     }
     
     /// Upload image that will be sent in a conversation message

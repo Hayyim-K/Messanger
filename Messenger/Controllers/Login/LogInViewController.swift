@@ -184,6 +184,15 @@ class LogInViewController: UIViewController {
         
     }
     
+    private func safeReturnToBeginning() {
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let delegate = windowScene.delegate as? SceneDelegate {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let initialViewController = storyboard.instantiateInitialViewController()
+            delegate.window?.rootViewController = initialViewController
+        }
+    }
+    
     // - MARK: EMAIL LOG IN
     @objc private func loginButtonTapped() {
         emailField.resignFirstResponder()
@@ -211,16 +220,17 @@ class LogInViewController: UIViewController {
                 strongSelf.spinner.dismiss()
             }
             
-            guard let result = authDataResult, error == nil else {
+            guard let result = authDataResult, error == nil
+            else {
                 print("Faild to log in user with email: \(email)")
                 return
             }
             let user = result.user
-            
             let safeEmail = DatabaseManager.safeEmail(emailAddress: email)
+            
             DatabaseManager.shared.getDataFor(path: safeEmail) { result in
                 switch result {
-                case . success(let data):
+                case .success(let data):
                     
                     guard let userData = data as? [String : Any],
                           let firstName = userData["firstName"] as? String,
@@ -245,14 +255,7 @@ class LogInViewController: UIViewController {
             print("Logged In User: \(user)")
             
             strongSelf.navigationController?.dismiss(animated: true){
-
-                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                   let delegate = windowScene.delegate as? SceneDelegate {
-                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    let initialViewController = storyboard.instantiateInitialViewController()
-                    delegate.window?.rootViewController = initialViewController
-                }
-                
+                strongSelf.safeReturnToBeginning()
             }
         }
         
@@ -414,7 +417,9 @@ extension LogInViewController: LoginButtonDelegate {
                     }
                     
                     print("Successfully logged user in faceBook")
-                    strongSelf.navigationController?.dismiss(animated: true)
+                    strongSelf.navigationController?.dismiss(animated: true) {
+                        strongSelf.safeReturnToBeginning()
+                    }
                     
                 }
             }
@@ -456,8 +461,8 @@ extension LogInViewController {
                   let firstName = user.profile?.givenName,
                   let lastName = user.profile?.familyName else { return }
             
-            UserDefaults.standard.set(email, forKey: "email")
-            UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
+            UserDefaults.standard.setValue(email, forKey: "email")
+            UserDefaults.standard.setValue("\(firstName) \(lastName)", forKey: "name")
             
             
             DatabaseManager.shared.userExists(with: email) { exists in
@@ -472,13 +477,13 @@ extension LogInViewController {
                         if success {
                             //upload image
                             guard let isImage = user.profile?.hasImage else { return }
+                            
                             if isImage {
-                                guard let url = user.profile?.imageURL(withDimension: 200) else { return }
+                                guard let url = user.profile?.imageURL(withDimension: 200)
+                                else { return }
                                 
                                 URLSession.shared.dataTask(with: url) { data, _, _ in
-                                    guard let data = data else {
-                                        return
-                                    }
+                                    guard let data = data else { return }
                                     
                                     // guard let image = self.imageView.image,
                                     // let data = image.pngData() else { return }
@@ -489,7 +494,7 @@ extension LogInViewController {
                                         fileName: fileName) { result in
                                             switch result {
                                             case .success(let downloadUrl):
-                                                UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
+                                                UserDefaults.standard.setValue(downloadUrl, forKey: "profile_picture_url")
                                                 print(downloadUrl)
                                             case .failure(let error):
                                                 print("Storage manager error: \(error)")
@@ -502,9 +507,12 @@ extension LogInViewController {
                 }
             }
             
-            let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: user.accessToken.tokenString)
+            let credential = GoogleAuthProvider.credential(
+                withIDToken: idToken,
+                accessToken: user.accessToken.tokenString
+            )
             
-            Auth.auth().signIn(with: credential){ authResult, error in
+            Auth.auth().signIn(with: credential){ [weak self] authResult, error in
                 
                 guard let _ = authResult, error == nil else {
                     if let error = error {
@@ -517,7 +525,9 @@ extension LogInViewController {
                 
                 NotificationCenter.default.post(name: .didLogInNotification, object: nil)
                 
-                self.navigationController?.dismiss(animated: true)
+                self?.navigationController?.dismiss(animated: true) {
+                    self?.safeReturnToBeginning()
+                }
                 
             }
             

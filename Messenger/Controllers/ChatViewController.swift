@@ -98,8 +98,8 @@ class ChatViewController: MessagesViewController {
     
     
     init(with email: String, id: String?) {
-        self.conversationID = id
-        self.otherUserEmail = email
+        conversationID = id
+        otherUserEmail = email
         super.init(nibName: nil, bundle: nil)
         //        if let conversationID = conversationID {
         //            listenForMessages(id: conversationID, shouldScrollToBottom: true)
@@ -307,7 +307,7 @@ class ChatViewController: MessagesViewController {
         
         guard let messageId = createMessageId(),
               let conversationID = conversationID,
-              let name = self.title,
+              let name = title,
               let selfSender = selfSender
         else { return }
         
@@ -440,7 +440,7 @@ extension ChatViewController: PHPickerViewControllerDelegate {
         
         guard let messageId = createMessageId(),
               let conversationID = conversationID,
-              let name = self.title,
+              let name = title,
               let selfSender = selfSender
         else { return }
         
@@ -585,7 +585,7 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
         picker.dismiss(animated: true)
         guard let messageId = createMessageId(),
               let conversationID = conversationID,
-              let name = self.title,
+              let name = title,
               let selfSender = selfSender
         else { return }
         
@@ -704,7 +704,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         didPressSendButtonWith text: String
     ) {
         guard !text.replacingOccurrences(of: " ", with: "").isEmpty,
-              let selfSender = self.selfSender,
+              let selfSender = selfSender,
               let messageId = createMessageId()
         else { return }
         
@@ -721,7 +721,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
             //create convo in dataBase
             DatabaseManager.shared.createNewConversation(
                 with: otherUserEmail,
-                name: self.title ?? "User",
+                name: title ?? "User",
                 firstMessage: message) { [weak self] success in
                     if success {
                         print("message sent")
@@ -742,7 +742,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
             
             //append to existing conversation data
             guard let conversationID = conversationID,
-                  let name = self.title
+                  let name = title
             else { return }
             
             DatabaseManager.shared.sendMessage(
@@ -930,7 +930,7 @@ extension ChatViewController: MessageCellDelegate {
             let vc = LocationPickerViewController(coordinates: coordinates)
             vc.title = "Location"
             
-            self.navigationController?.pushViewController(vc, animated: true)
+            navigationController?.pushViewController(vc, animated: true)
             
         default:
             break
@@ -974,7 +974,7 @@ extension ChatViewController: MessageCellDelegate {
             guard let imageURL = media.url else { return }
             
             let vc = PhotoViewerViewController(with: imageURL)
-            self.navigationController?.pushViewController(vc, animated: true)
+            navigationController?.pushViewController(vc, animated: true)
             
         case .video(let media):
             guard let videoURL = media.url else { return }

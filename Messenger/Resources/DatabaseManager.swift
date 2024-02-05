@@ -37,7 +37,7 @@ extension DatabaseManager {
         path: String,
         competion: @escaping (Result<Any, Error>) -> Void
     ) {
-        self.database
+        database
             .child("\(path)")
             .observeSingleEvent(of: .value) { snapshot in
                 guard let value = snapshot.value else {
@@ -89,12 +89,14 @@ extension DatabaseManager {
         database.child(user.safeEmail).setValue([
             "firstName" : user.firstName,
             "lastName" : user.lastName
-        ]) { error, _ in
+        ]) { [weak self] error, _ in
             guard error == nil else {
                 print("failed to write to dataBase")
                 completion(false)
                 return
             }
+            
+            guard let strongSelf = self else { return }
             
             /*
              user = [
@@ -109,7 +111,10 @@ extension DatabaseManager {
              ]
              */
             
-            self.database.child("users").observeSingleEvent(of: .value) { snapshot in
+            strongSelf
+                .database
+                .child("users")
+                .observeSingleEvent(of: .value) { snapshot in
                 
                 if var usersCollection = snapshot.value as? [[String : String]] {
                     //append to user dictionary
@@ -119,7 +124,10 @@ extension DatabaseManager {
                     ]
                     usersCollection.append(newElement)
                     
-                    self.database.child("users").setValue(usersCollection) { error, _ in
+                    strongSelf
+                        .database
+                        .child("users")
+                        .setValue(usersCollection) { error, _ in
                         guard error == nil else {
                             completion(false)
                             return
@@ -136,7 +144,10 @@ extension DatabaseManager {
                             "email": user.safeEmail
                         ]
                     ]
-                    self.database.child("users").setValue(newCollection) { error, _ in
+                    strongSelf
+                        .database
+                        .child("users")
+                        .setValue(newCollection) { error, _ in
                         guard error == nil else {
                             completion(false)
                             return
